@@ -1,5 +1,9 @@
 import random
 import time
+from datetime import datetime
+import os
+
+LOG_FILE = 'data_log.csv'
 
 def read_mock_data():
     """
@@ -22,20 +26,35 @@ def read_mock_data():
 print("啟動模擬感測器... 每 2 秒讀取一次數據。")
 print("按下 Ctrl+C 可以中斷程式。")
 
+
+if not os.path.exists('data_log.csv'):
+    with open(LOG_FILE, 'w') as f:
+        print(f"'{LOG_FILE}'不存在，正在建立並寫入標頭...")
+        f.write("timestamp,temperature,humidity\n")
+else:
+    print(f"'{LOG_FILE}' 已存在，將直接附加數據。")
+
+
 try:
     while True:
-        # 呼叫我們的模擬函數來取得數據
+        #呼叫我們的模擬函數來取得數據
         temp, humidity  = read_mock_data()
-
+        
         if temp is None: 
             print(f"讀取失敗，1秒後重試")
             time.sleep(1)
 
         else:
-            # 使用 f-string 格式化輸出，讓版面更美觀
+            now = datetime.now()
+            timestamp_str = now.strftime("%Y-%m-%d %H:%M:%S")
+
+            log_line = f"{timestamp_str}, {temp}, {humidity}\n"
+            with open('data_log.csv', 'a') as f:
+                f.write(log_line)
+
             print(f"讀取成功: 溫度 = {temp}°C, 濕度 = {humidity}%")
             # 等待 2 秒
-       	    time.sleep(2)
+            time.sleep(2)
 
 except KeyboardInterrupt:
     print("\n程式已結束。")

@@ -1,0 +1,11 @@
+# Python virtual environment
+venv/
+
+# Log files
+*.log
+data_log.csv
+
+# IDE and OS files
+.vscode/
+__pycache__/
+.DS_Store
